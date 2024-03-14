@@ -27,6 +27,7 @@ class OpenImageIOConan(ConanFile):
     options = {
         "shared": [True, False],
         "fPIC": [True, False],
+        "build_tools": [True, False],
         "with_libjpeg": ["libjpeg", "libjpeg-turbo"],
         "with_libpng": [True, False],
         "with_freetype": [True, False],
@@ -47,6 +48,7 @@ class OpenImageIOConan(ConanFile):
     default_options = {
         "shared": False,
         "fPIC": True,
+        "build_tools": False,  # Off by default, not needed necessarily when used as a library
         "with_libjpeg": "libjpeg",
         "with_libpng": True,
         "with_freetype": True,
@@ -149,7 +151,7 @@ class OpenImageIOConan(ConanFile):
 
         # CMake options
         tc.variables["CMAKE_DEBUG_POSTFIX"] = ""  # Needed for 2.3.x.x+ versions
-        tc.variables["OIIO_BUILD_TOOLS"] = True
+        tc.variables["OIIO_BUILD_TOOLS"] = False
         tc.variables["OIIO_BUILD_TESTS"] = False
         tc.variables["BUILD_DOCS"] = False
         tc.variables["INSTALL_DOCS"] = False
@@ -270,9 +272,7 @@ class OpenImageIOConan(ConanFile):
         if self.options.with_libjpeg == "libjpeg":
             open_image_io.requires.append("libjpeg::libjpeg")
         elif self.options.with_libjpeg == "libjpeg-turbo":
-            open_image_io.requires.append(
-                "libjpeg-turbo::libjpeg-turbo"
-            )
+            open_image_io.requires.append("libjpeg-turbo::libjpeg-turbo")
         if self.options.with_libpng:
             open_image_io.requires.append("libpng::libpng")
         if self.options.with_freetype:
