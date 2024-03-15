@@ -21,7 +21,7 @@ index 8125716a3..dd83c588f 100644
  endif ()
  
 diff --git src/cmake/externalpackages.cmake src/cmake/externalpackages.cmake
-index 3f73cd266..d03c906d1 100644
+index 3f73cd266..8e2556d86 100644
 --- src/cmake/externalpackages.cmake
 +++ src/cmake/externalpackages.cmake
 @@ -45,14 +45,14 @@ if (NOT DEFINED Boost_USE_STATIC_LIBS)
@@ -245,7 +245,7 @@ index 3f73cd266..d03c906d1 100644
 +if (USE_PTEX)
 +    checked_find_package (ptex REQUIRED PREFER_CONFIG)
 +endif()
-+ 
++
 +if (USE_LIBWEBP)
 +    checked_find_package (WebP REQUIRED)
 +endif()
@@ -346,7 +346,7 @@ index 8e47a8443..900d23101 100644
      message (STATUS "FFmpeg not found: ffmpeg plugin will not be built")
  endif()
 diff --git src/heif.imageio/CMakeLists.txt src/heif.imageio/CMakeLists.txt
-index 5b6c30a85..e5bc55ef1 100644
+index 5b6c30a85..5bccd88f0 100644
 --- src/heif.imageio/CMakeLists.txt
 +++ src/heif.imageio/CMakeLists.txt
 @@ -2,32 +2,31 @@
@@ -359,7 +359,7 @@ index 5b6c30a85..e5bc55ef1 100644
 -        set (_static_libraries_found 0)
 +if (USE_LIBHEIF)
 +    # if (LINKSTATIC)
-+    #     set (_static_suffixes .lib .a)    
++    #     set (_static_suffixes .lib .a)
 +    #     set (_static_libraries_found 0)
  
 -        foreach (_libeheif_library IN LISTS LIBHEIF_LIBRARIES)
@@ -403,6 +403,66 @@ index 5b6c30a85..e5bc55ef1 100644
                       DEFINITIONS "-DUSE_HEIF=1")
  else ()
      message (WARNING "heif plugin will not be built")
+diff --git src/iconvert/CMakeLists.txt src/iconvert/CMakeLists.txt
+index 735b88def..ae24c4cdb 100644
+--- src/iconvert/CMakeLists.txt
++++ src/iconvert/CMakeLists.txt
+@@ -2,4 +2,9 @@
+ # SPDX-License-Identifier: Apache-2.0
+ # https://github.com/AcademySoftwareFoundation/OpenImageIO
+ 
+-fancy_add_executable (LINK_LIBRARIES OpenImageIO)
++fancy_add_executable (LINK_LIBRARIES OpenImageIO
++                                     $<TARGET_NAME_IF_EXISTS:OpenColorIO::OpenColorIO>
++                                     $<TARGET_NAME_IF_EXISTS:OpenColorIO::OpenColorIOHeaders>
++                                     $<TARGET_NAME_IF_EXISTS:libheif::heif>
++                                     $<TARGET_NAME_IF_EXISTS:WebP::webp>
++                                     $<TARGET_NAME_IF_EXISTS:WebP::webpdemux>)
+diff --git src/idiff/CMakeLists.txt src/idiff/CMakeLists.txt
+index 735b88def..ae24c4cdb 100644
+--- src/idiff/CMakeLists.txt
++++ src/idiff/CMakeLists.txt
+@@ -2,4 +2,9 @@
+ # SPDX-License-Identifier: Apache-2.0
+ # https://github.com/AcademySoftwareFoundation/OpenImageIO
+ 
+-fancy_add_executable (LINK_LIBRARIES OpenImageIO)
++fancy_add_executable (LINK_LIBRARIES OpenImageIO
++                                     $<TARGET_NAME_IF_EXISTS:OpenColorIO::OpenColorIO>
++                                     $<TARGET_NAME_IF_EXISTS:OpenColorIO::OpenColorIOHeaders>
++                                     $<TARGET_NAME_IF_EXISTS:libheif::heif>
++                                     $<TARGET_NAME_IF_EXISTS:WebP::webp>
++                                     $<TARGET_NAME_IF_EXISTS:WebP::webpdemux>)
+diff --git src/igrep/CMakeLists.txt src/igrep/CMakeLists.txt
+index 735b88def..ae24c4cdb 100644
+--- src/igrep/CMakeLists.txt
++++ src/igrep/CMakeLists.txt
+@@ -2,4 +2,9 @@
+ # SPDX-License-Identifier: Apache-2.0
+ # https://github.com/AcademySoftwareFoundation/OpenImageIO
+ 
+-fancy_add_executable (LINK_LIBRARIES OpenImageIO)
++fancy_add_executable (LINK_LIBRARIES OpenImageIO
++                                     $<TARGET_NAME_IF_EXISTS:OpenColorIO::OpenColorIO>
++                                     $<TARGET_NAME_IF_EXISTS:OpenColorIO::OpenColorIOHeaders>
++                                     $<TARGET_NAME_IF_EXISTS:libheif::heif>
++                                     $<TARGET_NAME_IF_EXISTS:WebP::webp>
++                                     $<TARGET_NAME_IF_EXISTS:WebP::webpdemux>)
+diff --git src/iinfo/CMakeLists.txt src/iinfo/CMakeLists.txt
+index 735b88def..ae24c4cdb 100644
+--- src/iinfo/CMakeLists.txt
++++ src/iinfo/CMakeLists.txt
+@@ -2,4 +2,9 @@
+ # SPDX-License-Identifier: Apache-2.0
+ # https://github.com/AcademySoftwareFoundation/OpenImageIO
+ 
+-fancy_add_executable (LINK_LIBRARIES OpenImageIO)
++fancy_add_executable (LINK_LIBRARIES OpenImageIO
++                                     $<TARGET_NAME_IF_EXISTS:OpenColorIO::OpenColorIO>
++                                     $<TARGET_NAME_IF_EXISTS:OpenColorIO::OpenColorIOHeaders>
++                                     $<TARGET_NAME_IF_EXISTS:libheif::heif>
++                                     $<TARGET_NAME_IF_EXISTS:WebP::webp>
++                                     $<TARGET_NAME_IF_EXISTS:WebP::webpdemux>)
 diff --git src/include/CMakeLists.txt src/include/CMakeLists.txt
 index 7bec09739..3db17086f 100644
 --- src/include/CMakeLists.txt
@@ -444,11 +504,9 @@ index aeb7b7f93..9a32e4cf2 100644
              ${OPENIMAGEIO_OPENEXR_TARGETS}
 -            ${OpenCV_LIBRARIES}
              ${format_plugin_libs} # Add all the target link libraries from the plugins
--            $<TARGET_NAME_IF_EXISTS:OpenColorIO::OpenColorIO>
-+        PUBLIC    $<TARGET_NAME_IF_EXISTS:OpenColorIO::OpenColorIO>
+             $<TARGET_NAME_IF_EXISTS:OpenColorIO::OpenColorIO>
              $<TARGET_NAME_IF_EXISTS:OpenColorIO::OpenColorIOHeaders>
--            $<TARGET_NAME_IF_EXISTS:pugixml::pugixml>
-+        PRIVATE    $<TARGET_NAME_IF_EXISTS:pugixml::pugixml>
+             $<TARGET_NAME_IF_EXISTS:pugixml::pugixml>
              $<TARGET_NAME_IF_EXISTS:TBB::tbb>
 -            $<TARGET_NAME_IF_EXISTS:Freetype::Freetype>
              ${BZIP2_LIBRARIES}
@@ -498,6 +556,21 @@ index f873b3eed..cf5d4e74c 100644
  if (WIN32)
      add_definitions(-DWIN32_LEAN_AND_MEAN -DNOMINMAX -DNOGDI -DVC_EXTRALEAN)
      target_link_libraries (OpenImageIO_Util PRIVATE psapi)
+diff --git src/maketx/CMakeLists.txt src/maketx/CMakeLists.txt
+index 735b88def..ae24c4cdb 100644
+--- src/maketx/CMakeLists.txt
++++ src/maketx/CMakeLists.txt
+@@ -2,4 +2,9 @@
+ # SPDX-License-Identifier: Apache-2.0
+ # https://github.com/AcademySoftwareFoundation/OpenImageIO
+ 
+-fancy_add_executable (LINK_LIBRARIES OpenImageIO)
++fancy_add_executable (LINK_LIBRARIES OpenImageIO
++                                     $<TARGET_NAME_IF_EXISTS:OpenColorIO::OpenColorIO>
++                                     $<TARGET_NAME_IF_EXISTS:OpenColorIO::OpenColorIOHeaders>
++                                     $<TARGET_NAME_IF_EXISTS:libheif::heif>
++                                     $<TARGET_NAME_IF_EXISTS:WebP::webp>
++                                     $<TARGET_NAME_IF_EXISTS:WebP::webpdemux>)
 diff --git src/ptex.imageio/CMakeLists.txt src/ptex.imageio/CMakeLists.txt
 index 16634fedb..82060ac29 100644
 --- src/ptex.imageio/CMakeLists.txt
