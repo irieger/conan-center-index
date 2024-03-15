@@ -571,6 +571,20 @@ index 735b88def..ae24c4cdb 100644
 +                                     $<TARGET_NAME_IF_EXISTS:libheif::heif>
 +                                     $<TARGET_NAME_IF_EXISTS:WebP::webp>
 +                                     $<TARGET_NAME_IF_EXISTS:WebP::webpdemux>)
+diff --git src/oiiotool/CMakeLists.txt src/oiiotool/CMakeLists.txt
+index 212a442d7..889f7c7c9 100644
+--- src/oiiotool/CMakeLists.txt
++++ src/oiiotool/CMakeLists.txt
+@@ -7,4 +7,9 @@ fancy_add_executable (LINK_LIBRARIES
+                         $<TARGET_NAME_IF_EXISTS:OpenEXR::OpenEXR>
+                         $<TARGET_NAME_IF_EXISTS:OpenEXR::IlmImf>
+                         ${OPENEXR_LIBRARIES}
++                        $<TARGET_NAME_IF_EXISTS:OpenColorIO::OpenColorIO>
++                        $<TARGET_NAME_IF_EXISTS:OpenColorIO::OpenColorIOHeaders>
++                        $<TARGET_NAME_IF_EXISTS:libheif::heif>
++                        $<TARGET_NAME_IF_EXISTS:WebP::webp>
++                        $<TARGET_NAME_IF_EXISTS:WebP::webpdemux>
+                      )
 diff --git src/ptex.imageio/CMakeLists.txt src/ptex.imageio/CMakeLists.txt
 index 16634fedb..82060ac29 100644
 --- src/ptex.imageio/CMakeLists.txt
