@@ -278,7 +278,7 @@ class OpenImageIOConan(ConanFile):
         if self.options.with_hdf5:
             open_image_io.requires.append("hdf5::hdf5")
         if self.options.with_opencolorio:
-            open_image_io.requires.append("opencolorio::opencolorio")
+            open_image_io.requires.append("opencolorio::OpenColorIO")
         if self.options.with_opencv:
             open_image_io.requires.append("opencv::opencv")
         if self.options.with_dicom:
@@ -299,6 +299,7 @@ class OpenImageIOConan(ConanFile):
             open_image_io.requires.append("ptex::ptex")
         if self.options.with_libwebp:
             open_image_io.requires.append("libwebp::webp")
+            open_image_io.requires.append("libwebp::sharpyuv")
         if self.settings.os in ["Linux", "FreeBSD"]:
             open_image_io.system_libs.extend(["dl", "m", "pthread"])
 
