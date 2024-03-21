@@ -112,7 +112,6 @@ class LibheifConan(ConanFile):
         self.cpp_info.components["heif"].requires = []
         if self.options.with_libde265:
             self.cpp_info.components["heif"].requires.append("libde265::libde265")
-            self.cpp_info.components["heif"].requires.append("libde265::de265")
         if self.options.with_x265:
             self.cpp_info.components["heif"].requires.append("libx265::libx265")
         if self.options.with_libaomav1:
