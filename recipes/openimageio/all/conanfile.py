@@ -117,7 +117,6 @@ class OpenImageIOConan(ConanFile):
             self.requires("giflib/5.2.1")
         if self.options.with_libheif:
             self.requires("libheif/1.16.2")
-            self.requires("libde265/1.0.12")
         if self.options.with_raw:
             self.requires("libraw/0.21.2")
         if self.options.with_openjpeg:
@@ -279,7 +278,7 @@ class OpenImageIOConan(ConanFile):
         if self.options.with_hdf5:
             open_image_io.requires.append("hdf5::hdf5")
         if self.options.with_opencolorio:
-            open_image_io.requires.append("opencolorio::OpenColorIO")
+            open_image_io.requires.append("opencolorio::opencolorio")
         if self.options.with_opencv:
             open_image_io.requires.append("opencv::opencv")
         if self.options.with_dicom:
@@ -290,7 +289,6 @@ class OpenImageIOConan(ConanFile):
             open_image_io.requires.append("giflib::giflib")
         if self.options.with_libheif:
             open_image_io.requires.append("libheif::heif")
-            open_image_io.requires.append("libde265::libde265")
         if self.options.with_raw:
             open_image_io.requires.append("libraw::libraw")
         if self.options.with_openjpeg:
