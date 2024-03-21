@@ -289,6 +289,7 @@ class OpenImageIOConan(ConanFile):
             open_image_io.requires.append("giflib::giflib")
         if self.options.with_libheif:
             open_image_io.requires.append("libheif::heif")
+            open_image_io.requires.append("libde265::libde265")
         if self.options.with_raw:
             open_image_io.requires.append("libraw::libraw")
         if self.options.with_openjpeg:
