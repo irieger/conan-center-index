@@ -270,9 +270,7 @@ class OpenImageIOConan(ConanFile):
         if self.options.with_libjpeg == "libjpeg":
             open_image_io.requires.append("libjpeg::libjpeg")
         elif self.options.with_libjpeg == "libjpeg-turbo":
-            open_image_io.requires.append(
-                "libjpeg-turbo::libjpeg-turbo"
-            )
+            open_image_io.requires.append("libjpeg-turbo::libjpeg-turbo")
         if self.options.with_libpng:
             open_image_io.requires.append("libpng::libpng")
         if self.options.with_freetype:
@@ -290,7 +288,7 @@ class OpenImageIOConan(ConanFile):
         if self.options.with_giflib:
             open_image_io.requires.append("giflib::giflib")
         if self.options.with_libheif:
-            open_image_io.requires.append("libheif::libheif")
+            open_image_io.requires.append("libheif::heif")
         if self.options.with_raw:
             open_image_io.requires.append("libraw::libraw")
         if self.options.with_openjpeg:
@@ -300,7 +298,7 @@ class OpenImageIOConan(ConanFile):
         if self.options.with_ptex:
             open_image_io.requires.append("ptex::ptex")
         if self.options.with_libwebp:
-            open_image_io.requires.append("libwebp::libwebp")
+            open_image_io.requires.append("libwebp::webp")
         if self.settings.os in ["Linux", "FreeBSD"]:
             open_image_io.system_libs.extend(["dl", "m", "pthread"])
 
