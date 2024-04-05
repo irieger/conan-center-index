@@ -20,6 +20,20 @@ index 8125716a3..dd83c588f 100644
      add_subdirectory (src/iv)
  endif ()
  
+diff --git src/cmake/add_oiio_plugin.cmake src/cmake/add_oiio_plugin.cmake
+index edd563146..8930694c4 100644
+--- src/cmake/add_oiio_plugin.cmake
++++ src/cmake/add_oiio_plugin.cmake
+@@ -71,8 +71,7 @@ macro (add_oiio_plugin)
+                                         ${_plugin_DEFINITIONS}
+                                         OpenImageIO_EXPORTS)
+             target_include_directories (${_plugin_NAME} PRIVATE ${_plugin_INCLUDE_DIRS})
+-            target_link_libraries (${_plugin_NAME} PUBLIC OpenImageIO
+-                                                   PRIVATE ${_plugin_LINK_LIBRARIES})
++            target_link_libraries (${_plugin_NAME} PUBLIC OpenImageIO ${_plugin_LINK_LIBRARIES})
+             set_target_properties (${_plugin_NAME} PROPERTIES PREFIX "" FOLDER "Plugins")
+             install_targets (${_plugin_NAME})
+         endif ()
 diff --git src/cmake/externalpackages.cmake src/cmake/externalpackages.cmake
 index 3f73cd266..d03c906d1 100644
 --- src/cmake/externalpackages.cmake
@@ -435,12 +449,14 @@ index 560e8d486..24348fe66 100644
  else()
      message (WARNING "Jpeg-2000 plugin will not be built")
 diff --git src/libOpenImageIO/CMakeLists.txt src/libOpenImageIO/CMakeLists.txt
-index aeb7b7f93..9a32e4cf2 100644
+index aeb7b7f93..4b192489c 100644
 --- src/libOpenImageIO/CMakeLists.txt
 +++ src/libOpenImageIO/CMakeLists.txt
-@@ -154,19 +154,27 @@ target_link_libraries (OpenImageIO
+@@ -152,21 +152,28 @@ target_link_libraries (OpenImageIO
+             OpenImageIO_Util
+             ${OPENIMAGEIO_IMATH_DEPENDENCY_VISIBILITY}
              ${OPENIMAGEIO_IMATH_TARGETS}
-         PRIVATE
+-        PRIVATE
              ${OPENIMAGEIO_OPENEXR_TARGETS}
 -            ${OpenCV_LIBRARIES}
              ${format_plugin_libs} # Add all the target link libraries from the plugins
@@ -458,12 +474,12 @@ index aeb7b7f93..9a32e4cf2 100644
          )
  
 +if (USE_OPENCV)
-+    target_link_libraries (OpenImageIO PRIVATE opencv::opencv_core
++    target_link_libraries (OpenImageIO PUBLIC  opencv::opencv_core
 +                                               opencv::opencv_imgproc
 +                                               opencv::opencv_videoio)
 +endif ()
 +if (USE_FREETYPE)
-+    target_link_libraries (OpenImageIO PRIVATE Freetype::Freetype)
++    target_link_libraries (OpenImageIO PUBLIC Freetype::Freetype)
 +endif()
 +
  if (WIN32)
