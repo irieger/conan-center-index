@@ -14,6 +14,9 @@ sources:
   "0.8.1":
     url: "https://github.com/wolfpld/tracy/archive/refs/tags/v0.8.1.tar.gz"
     sha256: "004992012b2dc879a9f6d143cbf94d7ea30e88135db3ef08951605d214892891"
+  "cci.20240420":
+    url: "https://github.com/wolfpld/tracy/archive/d1300c491ca50962b5ba4d5b7d5a56b34b9e99ad.tar.gz"
+    sha256: "f0f8018594e09a3bdd3229492bd2cc908400d900bd90bce775bd11041456a75c"
   "cci.20220130":
     url: "https://github.com/wolfpld/tracy/archive/361782f3fdbeaefb9697f8fabe9d14e6b5d18f75.tar.gz"
     sha256: "9267964f39be6bf419318ab5ac01c8a2b8dd921696c18164f133ee7b18bcb00b"
