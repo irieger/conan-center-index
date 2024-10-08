@@ -1,4 +1,7 @@
 sources:
+  "0.22.0-preview.20241008":
+    url: "https://github.com/irieger/LibRaw/archive/mysnapshot.20241008.tar.gz"
+    sha256: "e682d5059a99ba09cd576d4a3105b32a1c4737decc83d4222484b292f26fa0c3"
   "0.21.3":
     url: "https://github.com/LibRaw/LibRaw/archive/0.21.3.tar.gz"
     sha256: "dc3d8b54e333d9d5441336049db255d14b27f19bd326a306cf5aea866806780a"
