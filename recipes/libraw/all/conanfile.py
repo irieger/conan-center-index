@@ -24,6 +24,7 @@ class LibRawConan(ConanFile):
         "with_jpeg": [False, "libjpeg", "libjpeg-turbo", "mozjpeg"],
         "with_lcms": [True, False],
         "with_jasper": [True, False],
+        "support_large_cr3": [True, False],
     }
     default_options = {
         "shared": False,
@@ -32,6 +33,7 @@ class LibRawConan(ConanFile):
         "with_jpeg": "libjpeg",
         "with_lcms": True,
         "with_jasper": True,
+        "support_large_cr3": False,
     }
     exports_sources = ["CMakeLists.txt"]
 
@@ -81,6 +83,7 @@ class LibRawConan(ConanFile):
         tc.variables["LIBRAW_WITH_JPEG"] = bool(self.options.with_jpeg)
         tc.variables["LIBRAW_WITH_LCMS"] = self.options.with_lcms
         tc.variables["LIBRAW_WITH_JASPER"] = self.options.with_jasper
+        tc.variables["LIBRAW_LARGE_CR3"] = self.options.support_large_cr3
         tc.generate()
 
         deps = CMakeDeps(self)
@@ -101,6 +104,8 @@ class LibRawConan(ConanFile):
         self.cpp_info.components["libraw_"].set_property("pkg_config_name", "libraw")
         self.cpp_info.components["libraw_"].libs = ["raw"]
         self.cpp_info.components["libraw_"].includedirs.append(os.path.join("include", "libraw"))
+        if self.options.support_large_cr3:
+            self.cpp_info.components["libraw_"].defines = ["LIBRAW_MAX_CR3_RAW_FILE_SIZE=1099511627776LL"]
 
         if self.settings.os == "Windows":
             self.cpp_info.components["libraw_"].system_libs.append("ws2_32")

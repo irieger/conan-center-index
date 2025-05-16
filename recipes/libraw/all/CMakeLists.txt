@@ -6,6 +6,8 @@ option(LIBRAW_WITH_JPEG "Build with libjpeg" ON)
 option(LIBRAW_WITH_LCMS "Build with LCMS" ON)
 option(LIBRAW_WITH_JASPER "Build with Jasper" ON)
 
+option(LIBRAW_LARGE_CR3 "Build for large CR3/CRM file support (1TB Theoretical limit for now)" OFF)
+
 if(RAW_LIB_VERSION_STRING VERSION_LESS 0.21)
     set(libraw_LIB_SRCS ${LIBRAW_SRC_DIR}/internal/dcraw_common.cpp
                         ${LIBRAW_SRC_DIR}/internal/dcraw_fileio.cpp
@@ -35,6 +37,9 @@ endif()
 add_library(raw ${libraw_LIB_SRCS})
 target_compile_features(raw PUBLIC cxx_std_11)
 target_include_directories(raw PUBLIC "${LIBRAW_SRC_DIR}")
+if(LIBRAW_LARGE_CR3)
+    target_compile_definitions(raw PUBLIC "LIBRAW_MAX_CR3_RAW_FILE_SIZE=1099511627776LL")
+endif()
 if(WIN32)
     target_link_libraries(raw PUBLIC ws2_32)
     if(BUILD_SHARED_LIBS)
