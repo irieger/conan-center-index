@@ -1,4 +1,6 @@
 versions:
+  "0.22.0-preview.20250515":
+    folder: all
   "0.22.0-preview.20241008":
     folder: all
   "0.21.3":
