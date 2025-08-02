@@ -1,4 +1,7 @@
 sources:
+  "1.6.1":
+    url: "https://github.com/irieger/bmx/archive/v1.6-arm64-linux.tar.gz"
+    sha256: "79fda3116c1a3e76272a362691c46d5ff658f2a32206dfd04ac04740f4d9f86f"
   "1.6":
     url: "https://github.com/bbc/bmx/archive/v1.6.tar.gz"
     sha256: "41f163965cb7fffcc022ad4a099c295b3699709ce2306ee89b713cfcfda3b25a"
@@ -9,6 +12,10 @@ sources:
     url: "https://github.com/bbc/bmx/archive/refs/tags/v1.2.tar.gz"
     sha256: "e64d91b2d27478d6b892d72183e1ecf79c99880b079ce04442432f3caed1e259"
 patches:
+  "1.6.1":
+    - patch_file: "patches/1.3-cmake-fixes.patch"
+      patch_description: "Ensure project builds correctly with Conan (don't pick up disabled dependencies from the system, fix different spelling of libraries)"
+      patch_type: "conan"
   "1.6":
     - patch_file: "patches/1.3-cmake-fixes.patch"
       patch_description: "Ensure project builds correctly with Conan (don't pick up disabled dependencies from the system, fix different spelling of libraries)"
