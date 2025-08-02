@@ -82,8 +82,8 @@ class OpenJPH(ConanFile):
         self.cpp_info.set_property("cmake_target_name", "openjph::openjph")
         self.cpp_info.set_property("pkg_config_name", "openjph")
 
-        version_suffix = ""
+        version_suffix = "_d" if self.settings.build_type == "Debug" else ""
         if is_msvc(self):
             v = Version(self.version)
-            version_suffix = f".{v.major}.{v.minor}"
+            version_suffix += f".{v.major}.{v.minor}"
         self.cpp_info.libs = ["openjph" + version_suffix]
