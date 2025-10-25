@@ -157,7 +157,7 @@ class OpenImageIOConan(ConanFile):
     def generate(self):
         tc = CMakeToolchain(self)
 
-        # CMake options
+        # CMake options (General selection of main options)
         tc.variables["CMAKE_DEBUG_POSTFIX"] = ""  # Needed for 2.3.x.x+ versions
         tc.variables["OIIO_BUILD_TOOLS"] = True
         tc.variables["OIIO_BUILD_TESTS"] = False
@@ -169,45 +169,63 @@ class OpenImageIOConan(ConanFile):
         tc.variables["USE_PYTHON"] = False
         tc.variables["USE_EXTERNAL_PUGIXML"] = True
         tc.variables["BUILD_MISSING_FMT"] = False
-
         # Conan is normally not used for testing, so fixing this option to not build the tests
         tc.variables["BUILD_TESTING"] = False
 
-        # OIIO CMake files are patched to check USE_* flags to require or not use dependencies
-        tc.variables["USE_JPEGTURBO"] = (
-            self.options.with_libjpeg == "libjpeg-turbo"
-        )
-        tc.variables[
-            "USE_JPEG"
-        ] = True  # Needed for jpeg.imageio plugin, libjpeg/libjpeg-turbo selection still works
+        # OIIO provides a wrapper for find_package that includes a check for USE_${LIBRARY} (checking for the whatever case variant
+        # is specified but always also for upper). See src/cmake/check_is_enabled.cmake. Thus we can control which dependencies are
+        # build as many dependencies are optional and can be configured.
+        tc.variables["USE_JPEGTURBO"] = self.options.with_libjpeg == "libjpeg-turbo"
+        tc.variables["USE_JPEG"] = True  # Needed for jpeg.imageio plugin, libjpeg/libjpeg-turbo selection still works
         tc.cache_variables["USE_JXL"] = self.options.get_safe("with_libjxl", False)
+        tc.variables["USE_PNG"] = self.options.with_libpng
+        tc.variables["USE_FREETYPE"] = self.options.with_freetype
         tc.variables["USE_HDF5"] = self.options.with_hdf5
         tc.variables["USE_OPENCOLORIO"] = self.options.with_opencolorio
         tc.variables["USE_OPENCV"] = self.options.with_opencv
         tc.variables["USE_TBB"] = self.options.with_tbb
         tc.variables["USE_DCMTK"] = self.options.with_dicom
-        tc.variables["USE_FIELD3D"] = False
+        tc.variables["USE_FFMPEG"] = self.options.with_ffmpeg
         tc.variables["USE_GIF"] = self.options.with_giflib
         tc.variables["USE_LIBHEIF"] = self.options.with_libheif
         tc.variables["USE_LIBRAW"] = self.options.with_raw
+        tc.variables["USE_OPENJPEG"] = self.options.with_openjpeg
         tc.variables["USE_OPENVDB"] = self.options.with_openvdb
         tc.variables["USE_PTEX"] = self.options.with_ptex
+        tc.variables["USE_WEBP"] = self.options.with_libwebp
+        tc.variables["USE_LIBUHDR"] = self.options.get_safe("with_libultrahdr", False)
+
+        # Not supported yet with the conan package.
         tc.variables["USE_R3DSDK"] = False
         tc.variables["USE_NUKE"] = False
         tc.variables["USE_OPENGL"] = False
         tc.variables["USE_QT"] = False
-        tc.variables["USE_LIBPNG"] = self.options.with_libpng
-        tc.variables["USE_FREETYPE"] = self.options.with_freetype
-        tc.variables["USE_LIBWEBP"] = self.options.with_libwebp
-        tc.variables["USE_OPENJPEG"] = self.options.with_openjpeg
+        tc.variables["USE_FIELD3D"] = False
 
-        if self.options.with_ffmpeg:
-            tc.cache_variables["USE_FFMPEG"] = self.options.with_ffmpeg
-            tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_FFmpeg"] = True
-            tc.cache_variables["FFMPEG_VERSION"] = f'"{str(self.dependencies["ffmpeg"].ref.version)}"'
+        # Dependencies that are disabled will not call find_package, so to make sure that all reqeusted
+        # modules are integrated, we can just force require to ensure if not disabled via USE_*, missing
+        # find_package calls are silently failing.
+        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_libjpeg-turbo"] = self.options.with_libjpeg != "libjpeg-turbo"
+        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_JPEG"] = True  # This will only be evaluated if libjpeg-turbo failed
+        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_JXL"] = True
+        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_PNG"] = True
+        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_Freetype"] = True
+        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_HDF5"] = True
+        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_OpenColorIO"] = True
+        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_OpenCV"] = True
+        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_TBB"] = True
+        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_DCMTK"] = True
+        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_FFmpeg"] = True
+        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_GIF"] = True
+        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_Libheif"] = True
+        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_LibRaw"] = True
+        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_OpenJPEG"] = True
+        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_OpenVDB"] = True
+        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_Ptex"] = True
+        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_WebP"] = True
+        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_libuhdr"] = True
 
-        if Version(self.version) < "3.0":
-            tc.cache_variables["Boost_USE_STATIC_LIBS"] = not self.dependencies["boost"].options.shared
+        # Prepare some internal
         tc.cache_variables["BUILD_MISSING_ROBINMAP"] = False
         tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_Robinmap"] = True
         tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_pugixml"] = True
@@ -215,25 +233,12 @@ class OpenImageIOConan(ConanFile):
         tc.cache_variables["ROBINMAP_INCLUDES"] = self.dependencies["tsl-robin-map"].cpp_info.includedirs[0].replace("\\", "/")
         tc.cache_variables["IMATH_INCLUDES"] = self.dependencies["imath"].cpp_info.includedirs[0].replace("\\", "/")
         tc.cache_variables["OPENEXR_INCLUDES"] = self.dependencies["openexr"].cpp_info.includedirs[0].replace("\\", "/")
-        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_PNG"] = self.options.with_libpng
-        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_Freetype"] = self.options.with_freetype
-        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_OpenColorIO"] = self.options.with_opencolorio
-        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_OpenCV"] = self.options.with_opencv
-        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_TBB"] = self.options.with_tbb
-        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_DCMTK"] = self.options.with_dicom
-        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_GIF"] = self.options.with_giflib
-        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_Libheif"] = self.options.with_libheif
-        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_LibRaw"] = self.options.with_raw
-        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_OpenJPEG"] = self.options.with_openjpeg
-        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_Ptex"] = self.options.with_ptex
-        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_WebP"] = self.options.with_libwebp
-        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_JXL"] = self.options.get_safe("with_libjxl", False)
 
-        tc.cache_variables["CMAKE_DISABLE_FIND_PACKAGE_libjpeg-turbo"] = self.options.with_libjpeg != "libjpeg-turbo"
-        tc.cache_variables["CMAKE_DISABLE_FIND_PACKAGE_R3DSDK"] = True
-        tc.cache_variables["CMAKE_DISABLE_FIND_PACKAGE_Nuke"] = True
-        tc.cache_variables["CMAKE_DISABLE_FIND_PACKAGE_JXL"] = not self.options.get_safe("with_libjxl", False)
+        if self.options.with_ffmpeg:
+            tc.cache_variables["FFMPEG_VERSION"] = f'"{str(self.dependencies["ffmpeg"].ref.version)}"'
 
+        if Version(self.version) < "3.0":
+            tc.cache_variables["Boost_USE_STATIC_LIBS"] = not self.dependencies["boost"].options.shared
 
         if self.settings.os == "Linux":
             # Workaround for: https://github.com/conan-io/conan/issues/13560
@@ -241,6 +246,7 @@ class OpenImageIOConan(ConanFile):
             libdirs_host = [l for dependency in self.dependencies.host.values() for l in dependency.cpp_info.aggregated_components().libdirs]
             tc.cache_variables["CMAKE_BUILD_RPATH"] = ";".join(libdirs_host)
         tc.generate()
+
         deps = CMakeDeps(self)
         deps.set_property("fmt", "cmake_additional_variables_prefixes", ["FMT"])
         deps.set_property("ffmpeg", "cmake_additional_variables_prefixes", ["FFMPEG"])
