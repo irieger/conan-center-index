@@ -146,6 +146,10 @@ class OpenImageIOConan(ConanFile):
             raise ConanInvalidConfiguration(
                 "Building shared library with static runtime is not supported!"
             )
+        if Version(self.version) >= "3.0" and not self.options.with_opencolorio:
+            raise ConanInvalidConfiguration(
+                "With OpenImageIO 3.0, OpenColorIO became a mandatory dependency and can't be deactived!"
+            )
 
     def layout(self):
         cmake_layout(self, src_folder="src")
