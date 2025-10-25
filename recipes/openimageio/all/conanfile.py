@@ -222,10 +222,8 @@ class OpenImageIOConan(ConanFile):
         tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_libuhdr"] = True
 
         # Prepare some internal
-        tc.cache_variables["BUILD_MISSING_ROBINMAP"] = False
         tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_Robinmap"] = True
         tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_pugixml"] = True
-        tc.cache_variables["INTERNALIZE_FMT"] = False
         tc.cache_variables["ROBINMAP_INCLUDES"] = self.dependencies["tsl-robin-map"].cpp_info.includedirs[0].replace("\\", "/")
         tc.cache_variables["IMATH_INCLUDES"] = self.dependencies["imath"].cpp_info.includedirs[0].replace("\\", "/")
         tc.cache_variables["OPENEXR_INCLUDES"] = self.dependencies["openexr"].cpp_info.includedirs[0].replace("\\", "/")
@@ -235,6 +233,10 @@ class OpenImageIOConan(ConanFile):
 
         if Version(self.version) < "3.0":
             tc.cache_variables["Boost_USE_STATIC_LIBS"] = not self.dependencies["boost"].options.shared
+            tc.cache_variables["BUILD_MISSING_ROBINMAP"] = False
+            tc.cache_variables["INTERNALIZE_FMT"] = False
+        else:
+            tc.cache_variables["OIIO_INTERNALIZE_FMT"] = False
 
         if self.settings.os == "Linux":
             # Workaround for: https://github.com/conan-io/conan/issues/13560
