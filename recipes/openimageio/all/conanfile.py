@@ -31,7 +31,6 @@ class OpenImageIOConan(ConanFile):
         "with_libjxl": [True, False],
         "with_libpng": [True, False],
         "with_freetype": [True, False],
-        "with_hdf5": [True, False],
         "with_opencolorio": [True, False],
         "with_opencv": [True, False],
         "with_tbb": [True, False],
@@ -53,7 +52,6 @@ class OpenImageIOConan(ConanFile):
         "with_libjxl": True,
         "with_libpng": True,
         "with_freetype": True,
-        "with_hdf5": True,
         "with_opencolorio": True,
         "with_opencv": False,
         "with_tbb": False,
@@ -107,8 +105,6 @@ class OpenImageIOConan(ConanFile):
             self.requires("libpng/[>=1.6 <2]")
         if self.options.with_freetype:
             self.requires("freetype/2.13.2")
-        if self.options.with_hdf5:
-            self.requires("hdf5/1.14.3")
         if self.options.with_opencolorio:
             self.requires("opencolorio/[>=2.3.1 <4]")
         if self.options.with_opencv:
@@ -119,7 +115,6 @@ class OpenImageIOConan(ConanFile):
             self.requires("dcmtk/3.6.7")
         if self.options.with_ffmpeg:
             self.requires("ffmpeg/[>=6.1 <8.0]")
-        # TODO: Field3D dependency
         if self.options.with_giflib:
             self.requires("giflib/5.2.1")
         if self.options.with_libheif:
@@ -184,7 +179,6 @@ class OpenImageIOConan(ConanFile):
         tc.cache_variables["USE_JXL"] = self.options.get_safe("with_libjxl", False)
         tc.variables["USE_PNG"] = self.options.with_libpng
         tc.variables["USE_FREETYPE"] = self.options.with_freetype
-        tc.variables["USE_HDF5"] = self.options.with_hdf5
         tc.variables["USE_OPENCOLORIO"] = self.options.with_opencolorio
         tc.variables["USE_OPENCV"] = self.options.with_opencv
         tc.variables["USE_TBB"] = self.options.with_tbb
@@ -204,7 +198,6 @@ class OpenImageIOConan(ConanFile):
         tc.variables["USE_NUKE"] = False
         tc.variables["USE_OPENGL"] = False
         tc.variables["USE_QT"] = False
-        tc.variables["USE_FIELD3D"] = False
 
         # Dependencies that are disabled will not call find_package, so to make sure that all reqeusted
         # modules are integrated, we can just force require to ensure if not disabled via USE_*, missing
@@ -214,7 +207,6 @@ class OpenImageIOConan(ConanFile):
         tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_JXL"] = True
         tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_PNG"] = True
         tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_Freetype"] = True
-        tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_HDF5"] = True
         tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_OpenColorIO"] = True
         tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_OpenCV"] = True
         tc.cache_variables["CMAKE_REQUIRE_FIND_PACKAGE_TBB"] = True
@@ -338,8 +330,6 @@ class OpenImageIOConan(ConanFile):
             open_image_io.requires.append("libpng::libpng")
         if self.options.with_freetype:
             open_image_io.requires.append("freetype::freetype")
-        if self.options.with_hdf5:
-            open_image_io.requires.append("hdf5::hdf5")
         if self.options.with_opencolorio:
             open_image_io.requires.append("opencolorio::opencolorio")
         if self.options.with_opencv:
