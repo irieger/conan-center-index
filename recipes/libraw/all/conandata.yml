@@ -1,10 +1,10 @@
 sources:
+  "0.22.0-prerc1":
+    url: "https://github.com/LibRaw/LibRaw/archive/3733457df9b0420cb90061bceae06adec5aa33c7.tar.gz"
+    sha256: "0847d48cedc5986560333718337ff4b6f85485f6edf89572d5e9405296a216ce"
   "0.21.4":
     url: "https://github.com/LibRaw/LibRaw/archive/0.21.4.tar.gz"
     sha256: "8baeb5253c746441fadad62e9c5c43ff4e414e41b0c45d6dcabccb542b2dff4b"
-  "0.21.3":
-    url: "https://github.com/LibRaw/LibRaw/archive/0.21.3.tar.gz"
-    sha256: "dc3d8b54e333d9d5441336049db255d14b27f19bd326a306cf5aea866806780a"
   "0.21.2":
     url: "https://github.com/LibRaw/LibRaw/archive/0.21.2.tar.gz"
     sha256: "7ac056e0d9e814d808f6973a950bbf45e71b53283eed07a7ea87117a6c0ced96"
