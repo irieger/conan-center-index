@@ -1,4 +1,7 @@
 sources:
+  "0.22.0-prerc1":
+    url: "https://github.com/LibRaw/LibRaw/archive/3733457df9b0420cb90061bceae06adec5aa33c7.tar.gz"
+    sha256: "0847d48cedc5986560333718337ff4b6f85485f6edf89572d5e9405296a216ce"
   "0.21.5b":
     url: "https://github.com/LibRaw/LibRaw/archive/0.21.5b.tar.gz"
     sha256: "f60e8377dec42e50f59ed2860ba00bcb59773e04afbf7bd6bd9367ac3529e0e8"
