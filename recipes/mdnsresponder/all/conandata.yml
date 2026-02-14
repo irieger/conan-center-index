@@ -35,9 +35,9 @@ patches:
       patch_description: "add missing unicast cropping option: update Makefile to add missing cropping option, and update uDNS.c to resolve related compilation errors."
       patch_type: "bugfix"
   "2881.40.18":
-    - patch_file: "patches/2881.60.4/support-cross-building.patch"
+    - patch_file: "patches/2881.40.18/support-cross-building.patch"
       patch_description: "allow dependencies provided by conan and support cross-building for linux:update Makefile to use dependencies provided by conan and support cross-building."
       patch_type: "conan"
-    - patch_file: "patches/2881.60.4/add-unicast-disabled-flag.patch"
+    - patch_file: "patches/2881.40.18/add-unicast-disabled-flag.patch"
       patch_description: "add missing unicast cropping option: update Makefile to add missing unicast disable option."
       patch_type: "bugfix"

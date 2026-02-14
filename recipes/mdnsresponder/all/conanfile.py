@@ -132,6 +132,8 @@ class MdnsResponderConan(ConanFile):
 
     def _build_msvc(self):
         sln = os.path.join(self.source_folder, "mDNSResponder.sln")
+        if Version(self.version) >= "1790.80.10":
+            sln = os.path.join(self.source_folder, "mDNSWindows", "mDNSResponder.sln")
         if "MD" in self.settings.compiler.runtime:
             # could use glob and replace_in_file(strict=False, ...)
             dll_vcxproj = os.path.join(self.source_folder, "mDNSWindows", "DLL", "dnssd.vcxproj")
@@ -142,9 +144,14 @@ class MdnsResponderConan(ConanFile):
                 replace_in_file(self, vcxproj, "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>", "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>")
 
         # could use glob and replace_in_file(strict=False, ...)
-        dll_rc = os.path.join(self.source_folder, "mDNSWindows", "DLL", "dll.rc")
+        # Newer versions only partially use an afxres.h include.
+        dll_rc_for_replacement = []
+        if Version(self.version) < "1790.80.10":
+            dll_rc = os.path.join(self.source_folder, "mDNSWindows", "DLL", "dll.rc")
+            dll_rc_for_replacement.append(dll_rc)
         dns_sd_rc = os.path.join(self.source_folder, "Clients", "DNS-SD.VisualStudio", "dns-sd.rc")
-        for rc in [dll_rc, dns_sd_rc]:
+        dll_rc_for_replacement.append(dns_sd_rc)
+        for rc in dll_rc_for_replacement:
             replace_in_file(self, rc, "afxres.h", "winres.h")
 
         msbuild = MSBuild(self)
