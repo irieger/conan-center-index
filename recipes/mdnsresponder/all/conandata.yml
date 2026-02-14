@@ -41,3 +41,6 @@ patches:
     - patch_file: "patches/2881.40.18/add-unicast-disabled-flag.patch"
       patch_description: "add missing unicast cropping option: update Makefile to add missing unicast disable option."
       patch_type: "bugfix"
+    - patch_file: "patches/2881.40.18/windows-vcxproj.patch"
+      patch_description: "fix visual studio project files to patch out no longer existing source file."
+      patch_type: "bugfix"
